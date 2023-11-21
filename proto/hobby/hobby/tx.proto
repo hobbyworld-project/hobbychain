@@ -1,0 +1,7 @@
+syntax = "proto3";
+package hobby.hobby;
+
+option go_package = "github.com/hobbyworld-project/hobbychain/x/hobby/types";
+
+// Msg defines the Msg service.
+service Msg {}

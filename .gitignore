@@ -1,0 +1,12 @@
+vue/node_modules
+vue/dist
+release/
+.idea/
+.vscode/
+.DS_Store
+/cmd/hobbyd/hobbyd
+./hobbyd
+/hobbyd
+~
+/go.work
+/go.work.sum

@@ -1,0 +1,12 @@
+syntax = "proto3";
+package hobby.hobby;
+
+import "gogoproto/gogo.proto";
+import "hobby/hobby/params.proto";
+
+option go_package = "github.com/hobbyworld-project/hobbychain/x/hobby/types";
+
+// GenesisState defines the hobby module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+}
