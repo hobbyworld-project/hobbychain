@@ -59,7 +59,7 @@ func ClaimStakingRewardsIfNecessary(
 	return nil
 
 	stakingDenom := stakingKeeper.BondDenom(ctx)
-	stakingDenom = "ushby"
+	stakingDenom = "usby"
 
 	found, amountInStakingDenom := Find(amount, stakingDenom)
 	if !found {

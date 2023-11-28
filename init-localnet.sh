@@ -30,10 +30,10 @@ echo "./hobbyd init $MONIKER --chain-id $CHAINID"
 
 # Change parameter token denominations to aphoton
 cat $HOME/.hobby/config/genesis.json | jq '.app_state["staking"]["params"]["bond_denom"]="uhby"' > $HOME/.hobby/config/tmp_genesis.json && mv $HOME/.hobby/config/tmp_genesis.json $HOME/.hobby/config/genesis.json
-cat $HOME/.hobby/config/genesis.json | jq '.app_state["crisis"]["constant_fee"]["denom"]="ushby"' > $HOME/.hobby/config/tmp_genesis.json && mv $HOME/.hobby/config/tmp_genesis.json $HOME/.hobby/config/genesis.json
-cat $HOME/.hobby/config/genesis.json | jq '.app_state["gov"]["deposit_params"]["min_deposit"][0]["denom"]="ushby"' > $HOME/.hobby/config/tmp_genesis.json && mv $HOME/.hobby/config/tmp_genesis.json $HOME/.hobby/config/genesis.json
-cat $HOME/.hobby/config/genesis.json | jq '.app_state["mint"]["params"]["mint_denom"]="ushby"' > $HOME/.hobby/config/tmp_genesis.json && mv $HOME/.hobby/config/tmp_genesis.json $HOME/.hobby/config/genesis.json
-cat $HOME/.hobby/config/genesis.json | jq '.app_state["evm"]["params"]["evm_denom"]="ushby"' > $HOME/.hobby/config/tmp_genesis.json && mv $HOME/.hobby/config/tmp_genesis.json $HOME/.hobby/config/genesis.json
+cat $HOME/.hobby/config/genesis.json | jq '.app_state["crisis"]["constant_fee"]["denom"]="usby"' > $HOME/.hobby/config/tmp_genesis.json && mv $HOME/.hobby/config/tmp_genesis.json $HOME/.hobby/config/genesis.json
+cat $HOME/.hobby/config/genesis.json | jq '.app_state["gov"]["deposit_params"]["min_deposit"][0]["denom"]="usby"' > $HOME/.hobby/config/tmp_genesis.json && mv $HOME/.hobby/config/tmp_genesis.json $HOME/.hobby/config/genesis.json
+cat $HOME/.hobby/config/genesis.json | jq '.app_state["mint"]["params"]["mint_denom"]="usby"' > $HOME/.hobby/config/tmp_genesis.json && mv $HOME/.hobby/config/tmp_genesis.json $HOME/.hobby/config/genesis.json
+cat $HOME/.hobby/config/genesis.json | jq '.app_state["evm"]["params"]["evm_denom"]="usby"' > $HOME/.hobby/config/tmp_genesis.json && mv $HOME/.hobby/config/tmp_genesis.json $HOME/.hobby/config/genesis.json
 
 # Set gas limit in genesis
 cat $HOME/.hobby/config/genesis.json | jq '.consensus_params["block"]["max_gas"]="20000000"' > $HOME/.hobby/config/tmp_genesis.json && mv $HOME/.hobby/config/tmp_genesis.json $HOME/.hobby/config/genesis.json

@@ -5,11 +5,11 @@ accounts:
 - name: validator1
   coins:
   - 210000000000000000000000uhby
-  - 200000000000000000000000ushby
+  - 200000000000000000000000usby
 - name: validator2
   coins:
   - 210000000000000000000000uhby
-  - 200000000000000000000000ushby
+  - 200000000000000000000000usby
 client:
   openapi:
     path: docs/static/openapi.yml
@@ -18,7 +18,7 @@ validators:
   bonded: 200000000000000000000000uhby
   home: "$HOME/.hobby"
   app:
-     minimum-gas-prices: "10000000ushby,10000000uhby"
+     minimum-gas-prices: "1000000usby,1000000uhby"
      api:
          enable: true
          enabled-unsafe-cors: true
@@ -46,7 +46,7 @@ validators:
          prometheus: true
          prometheus_listen_addr: ":26660"
 genesis:
-  chain_id: "hobby_9001-1"
+  chain_id: "hobby_9000-1"
   initial_height: "1"
   genesis_time: "2023-11-09T07:46:56.293077949Z"
   consensus_params:
@@ -57,7 +57,10 @@ genesis:
   app_state:
     evm:
       params:
-        evm_denom: "ushby"
+        evm_denom: "usby"
+    claims:
+      params:
+        claims_denom: "usby"
     feemarket:
       params:
         base_fee: "5000000"
@@ -85,19 +88,19 @@ genesis:
               denom: "hby"
               exponent: 18
         - description: "The native gov token"
-          base: "ushby"
-          display: "shby"
+          base: "usby"
+          display: "sby"
           name: "mint token"
-          symbol: "SHBY"
+          symbol: "SBY"
           denom_units:
             - aliases: [ ]
-              denom: "ushby"
+              denom: "usby"
               exponent: 0
             - aliases: [ ]
-              denom: "ashby"
+              denom: "asby"
               exponent: 9
             - aliases: [ ]
-              denom: "shby"
+              denom: "sby"
               exponent: 18
     staking:
       params:
@@ -109,7 +112,7 @@ genesis:
         annual_provisions: "0.000000000000000000"
         inflation: "0.000000000000000000"
       params:
-        mint_denom: "ushby"
+        mint_denom: "usby"
         blocks_per_year: "4505142"
         goal_bonded: "0.670000000000000000"
         inflation_max: "0.200000000000000000"
@@ -123,7 +126,7 @@ genesis:
       params:
         min_deposit:
           - amount: "10000000000000000000000"
-            denom: "ushby"
+            denom: "usby"
     distribution:
       params:
         base_proposer_reward: "0.010000000000000000"
@@ -133,4 +136,4 @@ genesis:
     crisis:
       constant_fee:
         amount: "10000000000000000000"
-        denom: "ushby"
+        denom: "usby"
