@@ -1,0 +1,28 @@
+syntax = "proto3";
+package hobbychain.hobby;
+
+import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
+
+option go_package = "github.com/hobbyworld-project/hobbychain/x/hobby/types";
+
+// Params defines the parameters for the module.
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+  DenomExchange exchange = 1 [(gogoproto.nullable) = false, (gogoproto.jsontag) = "denom_exchange"];
+}
+
+message DenomExchange {
+  // type of coin exchange from
+  string from_denom = 1;
+  // type of coin exchange to
+  string to_denom = 2;
+  // exchange rate
+  string exchange_ratio = 3 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable)   = false
+  ];
+  // allow list
+  repeated string allow_list = 4;
+}

@@ -7,16 +7,16 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/suite"
 
-	"github.com/hobbyworld-project/hobbychain/x/mint"
-	"github.com/hobbyworld-project/hobbychain/x/mint/keeper"
-	minttestutil "github.com/hobbyworld-project/hobbychain/x/mint/testutil"
-	"github.com/hobbyworld-project/hobbychain/x/mint/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	"github.com/cosmos/cosmos-sdk/testutil"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	moduletestutil "github.com/cosmos/cosmos-sdk/types/module/testutil"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	"github.com/hobbyworld-project/hobbychain/x/mint"
+	"github.com/hobbyworld-project/hobbychain/x/mint/keeper"
+	minttestutil "github.com/hobbyworld-project/hobbychain/x/mint/testutil"
+	"github.com/hobbyworld-project/hobbychain/x/mint/types"
 )
 
 var minterAcc = authtypes.NewEmptyModuleAccount(types.ModuleName, authtypes.Minter)

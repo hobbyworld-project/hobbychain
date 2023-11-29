@@ -4,10 +4,10 @@ import (
 	"context"
 	"testing"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	keepertest "github.com/hobbyworld-project/hobbychain/testutil/keeper"
 	"github.com/hobbyworld-project/hobbychain/x/hobby/keeper"
 	"github.com/hobbyworld-project/hobbychain/x/hobby/types"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 )
 

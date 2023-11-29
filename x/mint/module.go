@@ -16,11 +16,6 @@ import (
 
 	"cosmossdk.io/depinject"
 
-	"github.com/hobbyworld-project/hobbychain/x/mint/client/cli"
-	"github.com/hobbyworld-project/hobbychain/x/mint/exported"
-	"github.com/hobbyworld-project/hobbychain/x/mint/keeper"
-	"github.com/hobbyworld-project/hobbychain/x/mint/simulation"
-	"github.com/hobbyworld-project/hobbychain/x/mint/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
@@ -30,6 +25,11 @@ import (
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+	"github.com/hobbyworld-project/hobbychain/x/mint/client/cli"
+	"github.com/hobbyworld-project/hobbychain/x/mint/exported"
+	"github.com/hobbyworld-project/hobbychain/x/mint/keeper"
+	"github.com/hobbyworld-project/hobbychain/x/mint/simulation"
+	"github.com/hobbyworld-project/hobbychain/x/mint/types"
 )
 
 // ConsensusVersion defines the current x/mint module consensus version.

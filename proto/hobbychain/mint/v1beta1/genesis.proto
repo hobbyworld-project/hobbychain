@@ -1,8 +1,8 @@
 syntax = "proto3";
-package hobby.mint.v1beta1;
+package hobbychain.mint.v1beta1;
 
 import "gogoproto/gogo.proto";
-import "hobby/mint/v1beta1/mint.proto";
+import "hobbychain/mint/v1beta1/mint.proto";
 import "amino/amino.proto";
 
 option go_package = "github.com/hobbyworld-project/hobbychain/x/mint/types";

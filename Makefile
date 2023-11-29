@@ -18,7 +18,8 @@ init:
 	ignite chain init --skip-proto
 
 proto:
-	ignite chain build
+	ignite chain build && cp -f ${GOPATH}/bin/hobbyd .
+.PHONY: proto
 
 debug:
 	./hobbyd start --pruning=nothing --evm.tracer=json --log_level trace \

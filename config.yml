@@ -18,7 +18,7 @@ validators:
   bonded: 200000000000000000000000uhby
   home: "$HOME/.hobby"
   app:
-     minimum-gas-prices: "1000000usby,1000000uhby"
+     minimum-gas-prices: "10000000usby,10000000uhby"
      api:
          enable: true
          enabled-unsafe-cors: true
@@ -70,6 +70,13 @@ genesis:
         enable_height: 0
         min_gas_multiplier: "0.500000000000000000"
         no_base_fee: false
+    hobby:
+      params:
+        exchange:
+          from_denom: "uhby"
+          to_denom: "usby"
+          exchange_ratio: "10.0"
+          allow_list: [ ]
     bank:
       denom_metadata:
         - description: "The native staking token"

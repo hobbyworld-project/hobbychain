@@ -1,9 +1,9 @@
 package keeper
 
 import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/hobbyworld-project/hobbychain/x/mint/exported"
 	v2 "github.com/hobbyworld-project/hobbychain/x/mint/migrations/v2"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // Migrator is a struct for handling in-place state migrations.

@@ -1,8 +1,8 @@
 syntax = "proto3";
-package hobby.hobby;
+package hobbychain.hobby;
 
 import "gogoproto/gogo.proto";
-import "hobby/hobby/params.proto";
+import "hobbychain/hobby/params.proto";
 
 option go_package = "github.com/hobbyworld-project/hobbychain/x/hobby/types";
 

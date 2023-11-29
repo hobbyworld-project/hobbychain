@@ -1,5 +1,5 @@
 syntax = "proto3";
-package hobby.mint.v1beta1;
+package hobbychain.mint.v1beta1;
 
 option go_package = "github.com/hobbyworld-project/hobbychain/x/mint/types";
 

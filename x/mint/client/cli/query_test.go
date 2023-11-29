@@ -15,10 +15,10 @@ import (
 	svrcmd "github.com/cosmos/cosmos-sdk/server/cmd"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 
-	"github.com/hobbyworld-project/hobbychain/x/mint"
-	mintcli "github.com/hobbyworld-project/hobbychain/x/mint/client/cli"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	testutilmod "github.com/cosmos/cosmos-sdk/types/module/testutil"
+	"github.com/hobbyworld-project/hobbychain/x/mint"
+	mintcli "github.com/hobbyworld-project/hobbychain/x/mint/client/cli"
 )
 
 func TestGetCmdQueryParams(t *testing.T) {

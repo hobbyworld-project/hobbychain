@@ -1,8 +1,8 @@
 package keeper
 
 import (
-	"github.com/hobbyworld-project/hobbychain/x/hobby/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/hobbyworld-project/hobbychain/x/hobby/types"
 )
 
 // GetParams get all parameters as types.Params

@@ -1,6 +1,7 @@
 package types
 
 import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"gopkg.in/yaml.v2"
 )
@@ -14,7 +15,18 @@ func ParamKeyTable() paramtypes.KeyTable {
 
 // NewParams creates a new Params instance
 func NewParams() Params {
-	return Params{}
+	//default uhby -> usby ratio
+	ratio, err := sdk.NewDecFromStr("10.0")
+	if err != nil {
+		panic("exchange ratio invalid")
+	}
+	return Params{
+		Exchange: DenomExchange{
+			FromDenom:     "uhby",
+			ToDenom:       "usby",
+			ExchangeRatio: ratio,
+		},
+	}
 }
 
 // DefaultParams returns a default set of parameters

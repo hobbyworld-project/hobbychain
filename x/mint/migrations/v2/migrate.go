@@ -1,10 +1,10 @@
 package v2
 
 import (
-	"github.com/hobbyworld-project/hobbychain/x/mint/exported"
-	"github.com/hobbyworld-project/hobbychain/x/mint/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/hobbyworld-project/hobbychain/x/mint/exported"
+	"github.com/hobbyworld-project/hobbychain/x/mint/types"
 )
 
 const (
