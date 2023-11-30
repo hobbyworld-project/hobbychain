@@ -266,7 +266,7 @@ require (
 replace (
 	// use cosmos fork of keyring
 	github.com/99designs/keyring => github.com/cosmos/keyring v1.2.0
-	github.com/cosmos/cosmos-sdk => github.com/hobbyworld-project/cosmos-sdk v0.47.6-rc1
+	github.com/cosmos/cosmos-sdk => github.com/hobbyworld-project/cosmos-sdk v0.47.6
 	github.com/ethereum/go-ethereum => github.com/hobbyworld-project/go-ethereum v1.10.26-evmos-rc2
 	// replace broken goleveldb
 	github.com/syndtr/goleveldb => github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
