@@ -39,6 +39,17 @@ require (
 	sigs.k8s.io/yaml v1.4.0
 )
 
+replace (
+	// use cosmos fork of keyring
+	github.com/99designs/keyring => github.com/cosmos/keyring v1.2.0
+	github.com/cosmos/cosmos-sdk => github.com/hobbyworld-project/cosmos-sdk v0.47.6
+	github.com/ethereum/go-ethereum => github.com/hobbyworld-project/go-ethereum v1.10.26-evmos-rc2
+	//github.com/evmos/evmos/v15 => github.com/hobbyworld-project/evmos/v15 v15.0.0
+	github.com/evmos/evmos/v15 => ../github.com/hobbyworld-project/evmos
+	// replace broken goleveldb
+	github.com/syndtr/goleveldb => github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
+)
+
 require (
 	cloud.google.com/go v0.110.7 // indirect
 	cloud.google.com/go/compute v1.23.0 // indirect
@@ -261,13 +272,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	nhooyr.io/websocket v1.8.7 // indirect
 	pgregory.net/rapid v0.5.5 // indirect
-)
-
-replace (
-	// use cosmos fork of keyring
-	github.com/99designs/keyring => github.com/cosmos/keyring v1.2.0
-	github.com/cosmos/cosmos-sdk => github.com/hobbyworld-project/cosmos-sdk v0.47.6
-	github.com/ethereum/go-ethereum => github.com/hobbyworld-project/go-ethereum v1.10.26-evmos-rc2
-	// replace broken goleveldb
-	github.com/syndtr/goleveldb => github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
 )

@@ -5,7 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/errors"
-	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+	govtypes "github.com/evmos/evmos/v15/x/gov/types"
 	"github.com/hobbyworld-project/hobbychain/x/mint/types"
 )
 
