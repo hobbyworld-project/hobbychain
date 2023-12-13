@@ -71,6 +71,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/group"
 	groupkeeper "github.com/cosmos/cosmos-sdk/x/group/keeper"
 	groupmodule "github.com/cosmos/cosmos-sdk/x/group/module"
+	"github.com/cosmos/cosmos-sdk/x/mint"
+	mintkeeper "github.com/cosmos/cosmos-sdk/x/mint/keeper"
+	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	nftkeeper "github.com/cosmos/cosmos-sdk/x/nft/keeper"
 	nftmodule "github.com/cosmos/cosmos-sdk/x/nft/module"
 	"github.com/cosmos/cosmos-sdk/x/params"
@@ -118,9 +121,6 @@ import (
 	hobbymodule "github.com/hobbyworld-project/hobbychain/x/hobby"
 	hobbymodulekeeper "github.com/hobbyworld-project/hobbychain/x/hobby/keeper"
 	hobbymoduletypes "github.com/hobbyworld-project/hobbychain/x/hobby/types"
-	"github.com/hobbyworld-project/hobbychain/x/mint"
-	mintkeeper "github.com/hobbyworld-project/hobbychain/x/mint/keeper"
-	minttypes "github.com/hobbyworld-project/hobbychain/x/mint/types"
 	"github.com/spf13/cast"
 
 	// this line is used by starport scaffolding # stargate/app/moduleImport
@@ -625,7 +625,7 @@ func New(
 
 	app.GovKeeper = *govKeeper.SetHooks(
 		govtypes.NewMultiGovHooks(
-		// register the governance hooks
+			// register the governance hooks
 		),
 	)
 
