@@ -24,7 +24,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
-	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+	govtypes "github.com/evmos/evmos/v15/x/gov/types"
 	"github.com/hobbyworld-project/hobbychain/x/mint/client/cli"
 	"github.com/hobbyworld-project/hobbychain/x/mint/exported"
 	"github.com/hobbyworld-project/hobbychain/x/mint/keeper"
