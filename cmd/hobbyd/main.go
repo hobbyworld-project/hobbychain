@@ -17,11 +17,11 @@ import (
 )
 
 const (
-	Version = "v0.5.2"
+	Version = "v0.7.0"
 )
 
 var (
-	BuildTime = "2023-11-21"
+	BuildTime = ""
 	GitCommit = ""
 )
 

@@ -15,10 +15,10 @@ install:build
 	cp -f hobbyd ${GOPATH}/bin && ln -nsf ${GOPATH}/bin/hobbyd ${GOPATH}/bin/coeusd
 
 init:
-	ignite chain init --skip-proto
+	ignite chain init --skip-proto -y
 
 proto:
-	ignite chain build && cp -f ${GOPATH}/bin/hobbyd .
+	ignite chain build -y && cp -f ${GOPATH}/bin/hobbyd .
 .PHONY: proto
 
 debug:
@@ -31,10 +31,15 @@ start:
 	./hobbyd start --pruning=nothing --json-rpc.api eth,txpool,personal,net,debug,web3,miner \
                  --api.enable --json-rpc.enable --json-rpc.address 0.0.0.0:8545  --json-rpc.ws-address 0.0.0.0:8546
 
-serve:install start
+serve: install start
 
-docker:clean
+docker: clean
 	docker build --tag coeus-node -f ./Dockerfile .
+
+reset: install init start
+
+docker-test: install
+	docker build --tag coeus-node -f ./Dockerfile.test .
 
 clean:
 	rm -rf $(BINS) $(CLEAN)

@@ -3,9 +3,8 @@ FROM golang:1.21 AS builder
 ENV SRC_DIR /code
 COPY . $SRC_DIR
 
-RUN go env -w GOPROXY=https://goproxy.io
-RUN apt-get update && apt-get install -y ca-certificates make build-essential
-RUN cd $SRC_DIR && make
+#RUN apt-get update && apt-get install -y ca-certificates
+RUN cd $SRC_DIR
 
 FROM ubuntu:22.04
 

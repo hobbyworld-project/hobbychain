@@ -9,7 +9,7 @@ option go_package = "github.com/hobbyworld-project/hobbychain/x/hobby/types";
 // Params defines the parameters for the module.
 message Params {
   option (gogoproto.goproto_stringer) = false;
-  DenomExchange exchange = 1 [(gogoproto.nullable) = false, (gogoproto.jsontag) = "denom_exchange"];
+  DenomExchange exchange = 1 [(gogoproto.nullable) = false, (gogoproto.jsontag) = "exchange"];
 }
 
 message DenomExchange {
