@@ -1,4 +1,5 @@
 syntax = "proto3";
+
 package hobbychain.hobby;
 
 option go_package = "github.com/hobbyworld-project/hobbychain/x/hobby/types";
@@ -7,11 +8,20 @@ option go_package = "github.com/hobbyworld-project/hobbychain/x/hobby/types";
 // Msg defines the Msg service.
 service Msg {
   rpc DemonExchange (MsgDemonExchange) returns (MsgDemonExchangeResponse);
+  rpc PrivateData   (MsgPrivateData  ) returns (MsgPrivateDataResponse  );
 }
-
 message MsgDemonExchange {
   string creator = 1;
   string amount  = 2;
 }
 
 message MsgDemonExchangeResponse {}
+
+message MsgPrivateData {
+  string creator = 1;
+  string key     = 2;
+  string value   = 3;
+}
+
+message MsgPrivateDataResponse {}
+
