@@ -27,6 +27,10 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgDemonExchange int = 100
 
+	opWeightMsgPrivateData = "op_weight_msg_private_data"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgPrivateData int = 100
+
 	// this line is used by starport scaffolding # simapp/module/const
 )
 
@@ -66,6 +70,17 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		hobbysimulation.SimulateMsgDemonExchange(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
+	var weightMsgPrivateData int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgPrivateData, &weightMsgPrivateData, nil,
+		func(_ *rand.Rand) {
+			weightMsgPrivateData = defaultWeightMsgPrivateData
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgPrivateData,
+		hobbysimulation.SimulateMsgPrivateData(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
 	// this line is used by starport scaffolding # simapp/module/operation
 
 	return operations
@@ -82,6 +97,14 @@ func (am AppModule) ProposalMsgs(simState module.SimulationState) []simtypes.Wei
 				return nil
 			},
 		),
-		// this line is used by starport scaffolding # simapp/module/OpMsg
+		simulation.NewWeightedProposalMsg(
+	opWeightMsgPrivateData,
+	defaultWeightMsgPrivateData,
+	func(r *rand.Rand, ctx sdk.Context, accs []simtypes.Account) sdk.Msg {
+		hobbysimulation.SimulateMsgPrivateData(am.accountKeeper, am.bankKeeper, am.keeper)
+		return nil
+	},
+),
+// this line is used by starport scaffolding # simapp/module/OpMsg
 	}
 }

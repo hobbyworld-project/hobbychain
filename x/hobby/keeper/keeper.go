@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"fmt"
+	"github.com/cosmos/cosmos-sdk/store/prefix"
 
 	"github.com/cometbft/cometbft/libs/log"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -81,4 +82,19 @@ func NewKeeper(
 
 func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
+}
+
+func (k Keeper) GetPrivateData(ctx sdk.Context, creator, key string) string {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.PrivateDataPrefix)
+	bz := store.Get(k.GetCreatorKeyPrefix(creator, key))
+	return string(bz)
+}
+
+func (k Keeper) SetPrivateData(ctx sdk.Context, creator, key, value string) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.PrivateDataPrefix)
+	store.Set(k.GetCreatorKeyPrefix(creator, key), []byte(value))
+}
+
+func (k Keeper) GetCreatorKeyPrefix(creator, key string) []byte {
+	return []byte(fmt.Sprintf("%s/%s", creator, key))
 }

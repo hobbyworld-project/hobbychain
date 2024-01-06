@@ -4,6 +4,7 @@ CLEAN:=
 BINS:=
 DATE_TIME=`date +'%Y%m%d %H:%M:%S'`
 COMMIT_ID=`git rev-parse --short HEAD`
+DOCKER := $(shell which docker)
 
 build:
 	go mod tidy \
@@ -17,9 +18,18 @@ install:build
 init:
 	ignite chain init --skip-proto -y
 
-proto:
-	ignite chain build -y && cp -f ${GOPATH}/bin/hobbyd .
-.PHONY: proto
+ignite-build:
+	ignite chain build -y --debug --clear-cache --check-dependencies -v
+
+# legacy version 0.11.6
+protoVer=0.13.0
+protoImageName=ghcr.io/cosmos/proto-builder:$(protoVer)
+protoImage=$(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace --user 0 $(protoImageName)
+
+proto-gen:
+	@echo "Generating Protobuf files"
+	@$(protoImage) sh ./scripts/protocgen.sh
+.PHONY: proto-gen
 
 debug:
 	./hobbyd start --pruning=nothing --evm.tracer=json --log_level trace \
@@ -44,5 +54,3 @@ docker-test: install
 clean:
 	rm -rf $(BINS) $(CLEAN)
 
-initg:
-	ignite chain init --skip-proto

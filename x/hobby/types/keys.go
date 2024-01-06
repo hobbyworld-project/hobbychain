@@ -14,6 +14,15 @@ const (
 	MemStoreKey = "mem_hobby"
 )
 
+const (
+	PrivateDataKeyMaxSize   = 128
+	PrivateDataValueMaxSize = 1024
+)
+
+var (
+	PrivateDataPrefix = []byte{0x01}
+)
+
 func KeyPrefix(p string) []byte {
 	return []byte(p)
 }
