@@ -729,8 +729,8 @@ github.com/hdevalence/ed25519consensus v0.1.0 h1:jtBwzzcHuTmFrQN6xQZn6CQEO/V9f7H
 github.com/hdevalence/ed25519consensus v0.1.0/go.mod h1:w3BHWjwJbFU29IRHL1Iqkw3sus+7FctEyM4RqDxYNzo=
 github.com/hobbyworld-project/cosmos-sdk v0.47.7-rc1 h1:GfQs+7T1VHvkfjDZjakOUspgG3xcFkyDfmqoUktLqLA=
 github.com/hobbyworld-project/cosmos-sdk v0.47.7-rc1/go.mod h1:cv4TE/EFMywjUvEjE6l7uDQcKBkI6EK23i01l5s/npw=
-github.com/hobbyworld-project/evmos/v15 v15.1.0-beta1 h1:eVpICySaxMaf3aj9Q031/dr16QKUDwlD4cMtBAziLt0=
-github.com/hobbyworld-project/evmos/v15 v15.1.0-beta1/go.mod h1:O7GcuBeJb4MJgGsDJRKyMMLz4giUpDkHv7ygqunl06k=
+github.com/hobbyworld-project/evmos/v15 v15.1.0-beta3 h1:9Jw4zObdG0etMpea/0jFlJ395U66ebaZM8P1y9I4ZZ4=
+github.com/hobbyworld-project/evmos/v15 v15.1.0-beta3/go.mod h1:O7GcuBeJb4MJgGsDJRKyMMLz4giUpDkHv7ygqunl06k=
 github.com/hobbyworld-project/go-ethereum v1.10.27-evmos-rc1 h1:xf6c5usEJbGUaySuT67woIYzHam8N2+u3pnPUzhoIqQ=
 github.com/hobbyworld-project/go-ethereum v1.10.27-evmos-rc1/go.mod h1:/6CsT5Ceen2WPLI/oCA3xMcZ5sWMF/D46SjM/ayY0Oo=
 github.com/holiman/bloomfilter/v2 v2.0.3 h1:73e0e/V0tCydx14a0SCYS/EWCxgwLZ18CZcZKVu0fao=
