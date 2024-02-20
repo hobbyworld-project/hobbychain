@@ -41,6 +41,7 @@ import (
 	// this line is used by starport scaffolding # root/moduleImport
 
 	"cosmossdk.io/simapp/params"
+	upgradecmd "github.com/cosmos/cosmos-sdk/x/upgrade/client/cli"
 	evmosclient "github.com/evmos/evmos/v15/client"
 	"github.com/evmos/evmos/v15/client/debug"
 	cmdcfg "github.com/evmos/evmos/v15/cmd/config"
@@ -191,6 +192,7 @@ func queryCommand() *cobra.Command {
 		rpc.BlockCommand(),
 		authcmd.QueryTxsByEventsCmd(),
 		authcmd.QueryTxCmd(),
+		upgradecmd.GetQueryCmd(),
 	)
 
 	app.ModuleBasics.AddQueryCommands(cmd)
@@ -220,6 +222,7 @@ func txCommand() *cobra.Command {
 		authcmd.GetEncodeCommand(),
 		authcmd.GetDecodeCommand(),
 		authcmd.GetAuxToFeeCommand(),
+		upgradecmd.GetTxCmd(),
 	)
 
 	app.ModuleBasics.AddTxCommands(cmd)
