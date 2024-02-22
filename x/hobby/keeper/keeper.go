@@ -3,6 +3,7 @@ package keeper
 import (
 	"fmt"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
+	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 
 	"github.com/cometbft/cometbft/libs/log"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -32,6 +33,8 @@ type (
 		capabilityKeeper types.CapabilityKeeper
 		paramsKeeper     types.ParamsKeeper
 		groupKeeper      types.GroupKeeper
+		evmKeeper        types.EVMKeeper
+		feeCollectorName string
 	}
 )
 
@@ -53,6 +56,8 @@ func NewKeeper(
 	capabilityKeeper types.CapabilityKeeper,
 	paramsKeeper types.ParamsKeeper,
 	groupKeeper types.GroupKeeper,
+	evmKeeper types.EVMKeeper,
+	feeCollectorName string,
 ) *Keeper {
 	// set KeyTable if it has not already been set
 	if !ps.HasKeyTable() {
@@ -60,11 +65,11 @@ func NewKeeper(
 	}
 
 	return &Keeper{
-		cdc:        cdc,
-		storeKey:   storeKey,
-		memKey:     memKey,
-		paramstore: ps,
-
+		cdc:              cdc,
+		storeKey:         storeKey,
+		memKey:           memKey,
+		paramstore:       ps,
+		evmKeeper:        evmKeeper,
 		accountKeeper:    accountKeeper,
 		authzKeeper:      authzKeeper,
 		bankKeeper:       bankKeeper,
@@ -77,6 +82,7 @@ func NewKeeper(
 		capabilityKeeper: capabilityKeeper,
 		paramsKeeper:     paramsKeeper,
 		groupKeeper:      groupKeeper,
+		feeCollectorName: feeCollectorName,
 	}
 }
 
@@ -97,4 +103,17 @@ func (k Keeper) SetPrivateData(ctx sdk.Context, creator, key, value string) {
 
 func (k Keeper) GetCreatorKeyPrefix(creator, key string) []byte {
 	return []byte(fmt.Sprintf("%s/%s", creator, key))
+}
+
+func (k Keeper) GetAllBalances(ctx sdk.Context, addr sdk.AccAddress) sdk.Coins {
+	return k.bankKeeper.GetAllBalances(ctx, addr)
+}
+
+// GetModuleAccount returns the module account
+func (keeper Keeper) GetModuleAccount(ctx sdk.Context) authtypes.ModuleAccountI {
+	return keeper.accountKeeper.GetModuleAccount(ctx, types.ModuleName)
+}
+
+func (keeper Keeper) SetModuleAccount(ctx sdk.Context, acc authtypes.ModuleAccountI) {
+	keeper.accountKeeper.SetModuleAccount(ctx, acc)
 }

@@ -38,10 +38,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 	evtypes "github.com/cosmos/cosmos-sdk/x/evidence/types"
 	"github.com/cosmos/cosmos-sdk/x/feegrant"
+	govtypesv1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 	utiltx "github.com/evmos/evmos/v15/testutil/tx"
 	evmtypes "github.com/evmos/evmos/v15/x/evm/types"
-	govtypesv1 "github.com/evmos/evmos/v15/x/gov/types/v1"
-	govtypes "github.com/evmos/evmos/v15/x/gov/types/v1beta1"
 )
 
 func (suite *AnteTestSuite) BuildTestEthTx(

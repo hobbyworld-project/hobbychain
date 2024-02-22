@@ -68,6 +68,12 @@ import (
 	feegrantmodule "github.com/cosmos/cosmos-sdk/x/feegrant/module"
 	"github.com/cosmos/cosmos-sdk/x/genutil"
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
+	"github.com/cosmos/cosmos-sdk/x/gov"
+	govclient "github.com/cosmos/cosmos-sdk/x/gov/client"
+	govkeeper "github.com/cosmos/cosmos-sdk/x/gov/keeper"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+	govv1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
+	govv1beta1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 	"github.com/cosmos/cosmos-sdk/x/group"
 	groupkeeper "github.com/cosmos/cosmos-sdk/x/group/keeper"
 	groupmodule "github.com/cosmos/cosmos-sdk/x/group/module"
@@ -102,18 +108,13 @@ import (
 	ibcfeetypes "github.com/cosmos/ibc-go/v7/modules/apps/29-fee/types"
 	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	ibc "github.com/cosmos/ibc-go/v7/modules/core"
+	ibcclient "github.com/cosmos/ibc-go/v7/modules/core/02-client"
 	ibcclienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	ibcporttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
 	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
 	solomachine "github.com/cosmos/ibc-go/v7/modules/light-clients/06-solomachine"
 	ibctm "github.com/cosmos/ibc-go/v7/modules/light-clients/07-tendermint"
-	"github.com/evmos/evmos/v15/x/gov"
-	govclient "github.com/evmos/evmos/v15/x/gov/client"
-	govkeeper "github.com/evmos/evmos/v15/x/gov/keeper"
-	govtypes "github.com/evmos/evmos/v15/x/gov/types"
-	govv1 "github.com/evmos/evmos/v15/x/gov/types/v1"
-	govv1beta1 "github.com/evmos/evmos/v15/x/gov/types/v1beta1"
 	"github.com/evmos/evmos/v15/x/ibc/transfer"
 	transferkeeper "github.com/evmos/evmos/v15/x/ibc/transfer/keeper"
 	vestingkeeper "github.com/evmos/evmos/v15/x/vesting/keeper"
@@ -128,7 +129,10 @@ import (
 	// appparams "github.com/hobbyworld-project/hobbychain/app/params"
 
 	simappparams "cosmossdk.io/simapp/params"
+	paramscli "github.com/cosmos/cosmos-sdk/x/params/client/cli"
+	upgradecli "github.com/cosmos/cosmos-sdk/x/upgrade/client/cli"
 	ibctransfer "github.com/cosmos/ibc-go/v7/modules/apps/transfer"
+	ibccli "github.com/cosmos/ibc-go/v7/modules/core/02-client/client/cli"
 	srvflags "github.com/evmos/evmos/v15/server/flags"
 	evmostypes "github.com/evmos/evmos/v15/types"
 	claimskeeper "github.com/evmos/evmos/v15/x/claims/keeper"
@@ -154,13 +158,17 @@ const (
 func getGovProposalHandlers() []govclient.ProposalHandler {
 	var govProposalHandlers []govclient.ProposalHandler
 	// this line is used by starport scaffolding # stargate/app/govProposalHandlers
-
+	var ParamsProposalHandler = govclient.NewProposalHandler(paramscli.NewSubmitParamChangeProposalTxCmd)
+	var UpgradeLegacyProposalHandler = govclient.NewProposalHandler(upgradecli.NewCmdSubmitLegacyUpgradeProposal)
+	var UpgradeLegacyCancelProposalHandler = govclient.NewProposalHandler(upgradecli.NewCmdSubmitLegacyCancelUpgradeProposal)
+	var UpdateClientProposalHandler = govclient.NewProposalHandler(ibccli.NewCmdSubmitUpdateClientProposal)
+	var UpgradeProposalHandler = govclient.NewProposalHandler(ibccli.NewCmdSubmitUpgradeProposal)
 	govProposalHandlers = append(govProposalHandlers,
-		govclient.ParamsProposalHandler,
-		govclient.UpgradeLegacyProposalHandler,
-		govclient.UpgradeLegacyCancelProposalHandler,
-		govclient.UpdateClientProposalHandler,
-		govclient.UpgradeProposalHandler,
+		ParamsProposalHandler,
+		UpgradeLegacyProposalHandler,
+		UpgradeLegacyCancelProposalHandler,
+		UpdateClientProposalHandler,
+		UpgradeProposalHandler,
 		// this line is used by starport scaffolding # stargate/app/govProposalHandler
 	)
 
@@ -200,13 +208,13 @@ var (
 		vesting.AppModuleBasic{},
 		nftmodule.AppModuleBasic{},
 		consensus.AppModuleBasic{},
-		hobbymodule.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 
 		evm.AppModuleBasic{},
 		feemarket.AppModuleBasic{},
 		erc20.AppModuleBasic{},
 		claims.AppModuleBasic{},
+		hobbymodule.AppModuleBasic{},
 	)
 
 	// module account permissions
@@ -218,10 +226,10 @@ var (
 		stakingtypes.BondedPoolName:    {authtypes.Burner, authtypes.Staking},
 		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
 		govtypes.ModuleName:            {authtypes.Minter, authtypes.Burner},
-		govtypes.SwapPoolName:          nil,
+		hobbymoduletypes.SwapPoolName:  nil,
+		hobbymoduletypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
 		nft.ModuleName:                 nil,
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
-		hobbymoduletypes.ModuleName:    {authtypes.Minter, authtypes.Burner, authtypes.Staking},
 		ibcfeetypes.ModuleName:         nil,
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 
@@ -609,25 +617,23 @@ func New(
 		app.AccountKeeper,
 		app.BankKeeper,
 		app.StakingKeeper,
-		app.EvmKeeper,
 		app.MsgServiceRouter(),
 		govConfig,
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
-		authtypes.FeeCollectorName,
 	)
 
 	govRouter := govv1beta1.NewRouter()
 	govRouter.
 		AddRoute(govtypes.RouterKey, govv1beta1.ProposalHandler).
-		AddRoute(paramproposal.RouterKey, govclient.NewParamChangeProposalHandler(app.ParamsKeeper)).
-		AddRoute(upgradetypes.RouterKey, govclient.NewSoftwareUpgradeProposalHandler(app.UpgradeKeeper)).
+		AddRoute(paramproposal.RouterKey, params.NewParamChangeProposalHandler(app.ParamsKeeper)).
+		AddRoute(upgradetypes.RouterKey, upgrade.NewSoftwareUpgradeProposalHandler(app.UpgradeKeeper)).
 		AddRoute(erc20types.RouterKey, erc20.NewErc20ProposalHandler(&app.Erc20Keeper)).
-		AddRoute(ibcclienttypes.RouterKey, govclient.NewClientProposalHandler(app.IBCKeeper.ClientKeeper))
+		AddRoute(ibcclienttypes.RouterKey, ibcclient.NewClientProposalHandler(app.IBCKeeper.ClientKeeper))
 	govKeeper.SetLegacyRouter(govRouter)
 
 	app.GovKeeper = *govKeeper.SetHooks(
 		govtypes.NewMultiGovHooks(
-			// register the governance hooks
+		// register the governance hooks
 		),
 	)
 
@@ -655,7 +661,6 @@ func New(
 		keys[hobbymoduletypes.StoreKey],
 		keys[hobbymoduletypes.MemStoreKey],
 		app.GetSubspace(hobbymoduletypes.ModuleName),
-
 		app.AccountKeeper,
 		app.AuthzKeeper,
 		app.BankKeeper,
@@ -668,6 +673,8 @@ func New(
 		app.CapabilityKeeper,
 		app.ParamsKeeper,
 		app.GroupKeeper,
+		app.EvmKeeper,
+		authtypes.FeeCollectorName,
 	)
 	hobbyModule := hobbymodule.NewAppModule(appCodec, app.HobbyKeeper, app.AccountKeeper, app.BankKeeper)
 
@@ -727,7 +734,7 @@ func New(
 		evmkeeper.NewMultiEvmHooks(
 			app.Erc20Keeper.Hooks(),
 			app.ClaimsKeeper.Hooks(),
-			app.GovKeeper.EvmHooks(),
+			app.HobbyKeeper.EvmHooks(),
 		),
 	)
 
@@ -754,7 +761,7 @@ func New(
 		capability.NewAppModule(appCodec, *app.CapabilityKeeper, false),
 		feegrantmodule.NewAppModule(appCodec, app.AccountKeeper, app.BankKeeper, app.FeeGrantKeeper, app.interfaceRegistry),
 		groupmodule.NewAppModule(appCodec, app.GroupKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
-		gov.NewAppModule(appCodec, &app.GovKeeper, app.AccountKeeper, app.BankKeeper, app.EvmKeeper, app.GetSubspace(govtypes.ModuleName)),
+		gov.NewAppModule(appCodec, &app.GovKeeper, app.AccountKeeper, app.BankKeeper, app.GetSubspace(govtypes.ModuleName)),
 		mint.NewAppModule(appCodec, app.MintKeeper, app.AccountKeeper, nil, app.GetSubspace(minttypes.ModuleName)),
 		slashing.NewAppModule(appCodec, app.SlashingKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper, app.GetSubspace(slashingtypes.ModuleName)),
 		distr.NewAppModule(appCodec, app.DistrKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper, app.GetSubspace(distrtypes.ModuleName)),
@@ -768,7 +775,6 @@ func New(
 		params.NewAppModule(app.ParamsKeeper),
 		transferModule,
 		icaModule,
-		hobbyModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 
 		// Ethermint app modules
@@ -777,6 +783,7 @@ func New(
 		erc20.NewAppModule(app.Erc20Keeper, app.AccountKeeper, app.GetSubspace(erc20types.ModuleName)),
 		claims.NewAppModule(appCodec, *app.ClaimsKeeper, app.GetSubspace(claimstypes.ModuleName)),
 		crisis.NewAppModule(app.CrisisKeeper, skipGenesisInvariants, app.GetSubspace(crisistypes.ModuleName)), // always be last to make sure that it checks for all invariants and not only part of them
+		hobbyModule,
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -807,7 +814,6 @@ func New(
 		paramstypes.ModuleName,
 		vestingtypes.ModuleName,
 		consensusparamtypes.ModuleName,
-		hobbymoduletypes.ModuleName,
 		ibcfeetypes.ModuleName,
 		nft.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
@@ -816,6 +822,7 @@ func New(
 		evmtypes.ModuleName,
 		erc20types.ModuleName,
 		claimstypes.ModuleName,
+		hobbymoduletypes.ModuleName,
 	)
 
 	app.mm.SetOrderEndBlockers(
@@ -841,7 +848,6 @@ func New(
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
 		consensusparamtypes.ModuleName,
-		hobbymoduletypes.ModuleName,
 		ibcfeetypes.ModuleName,
 		nft.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/endBlockers
@@ -850,6 +856,7 @@ func New(
 		feemarkettypes.ModuleName,
 		erc20types.ModuleName,
 		claimstypes.ModuleName,
+		hobbymoduletypes.ModuleName,
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -880,7 +887,6 @@ func New(
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
 		consensusparamtypes.ModuleName,
-		hobbymoduletypes.ModuleName,
 		ibcfeetypes.ModuleName,
 		nft.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
@@ -891,6 +897,7 @@ func New(
 		feemarkettypes.ModuleName,
 		erc20types.ModuleName,
 		claimstypes.ModuleName,
+		hobbymoduletypes.ModuleName,
 	}
 	app.mm.SetOrderInitGenesis(genesisModuleOrder...)
 	app.mm.SetOrderExportGenesis(genesisModuleOrder...)
@@ -978,23 +985,6 @@ func New(
 }
 
 func (app *App) setAnteHandler(txConfig client.TxConfig, maxGasWanted uint64) {
-	// anteHandler, err := NewAnteHandler(
-	// 	HandlerOptions{
-	// 		HandlerOptions: ante.HandlerOptions{
-	// 			AccountKeeper:   app.AccountKeeper,
-	// 			BankKeeper:      app.BankKeeper,
-	// 			SignModeHandler: txConfig.SignModeHandler(),
-	// 			FeegrantKeeper:  app.FeeGrantKeeper,
-	// 			SigGasConsumer:  ante.DefaultSigVerificationGasConsumer,
-	// 		},
-	// 		IBCKeeper:         app.IBCKeeper,
-	// 		TXCounterStoreKey: txCounterStoreKey,
-	// 	},
-	// )
-	// if err != nil {
-	// 	panic(fmt.Errorf("failed to create AnteHandler: %s", err))
-	// }
-
 	anteHandler := ante.NewAnteHandler(ante.HandlerOptions{
 		Cdc:                    app.appCodec,
 		AccountKeeper:          app.AccountKeeper,
