@@ -140,9 +140,35 @@ func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.Raw
 func (AppModule) ConsensusVersion() uint64 { return 1 }
 
 // BeginBlock contains the logic that is automatically triggered at the beginning of each block
-func (am AppModule) BeginBlock(_ sdk.Context, _ abci.RequestBeginBlock) {}
+func (am AppModule) BeginBlock(ctx sdk.Context, req abci.RequestBeginBlock) {
+	var validators []abci.Validator
+	votes := req.LastCommitInfo.Votes
+	for _, v := range votes {
+		validators = append(validators, v.Validator)
+	}
+	if ctx.BlockHeight() > 1 {
+		am.keeper.SettleVoterReward(ctx, validators)
+		am.keeper.CheckValidatorVotes(ctx, validators)
+	}
+	if ctx.BlockHeight() == 1 {
+		// deploy erc721 contract
+		contractAddr, err := am.keeper.DeployGovContract(ctx)
+		if err != nil {
+			panic(err.Error())
+		}
+		am.keeper.SetGovContractAddr(ctx, contractAddr)
+
+		// deploy swap contract
+		contractAddr, err = am.keeper.DeploySwapContract(ctx)
+		if err != nil {
+			panic(err.Error())
+		}
+		am.keeper.SetSwapContractAddr(ctx, contractAddr)
+		am.keeper.SettleNftVesting(ctx)
+	}
+}
 
 // EndBlock contains the logic that is automatically triggered at the end of each block
-func (am AppModule) EndBlock(_ sdk.Context, _ abci.RequestEndBlock) []abci.ValidatorUpdate {
+func (am AppModule) EndBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.ValidatorUpdate {
 	return []abci.ValidatorUpdate{}
 }

@@ -1,6 +1,7 @@
 syntax = "proto3";
 package hobbychain.hobby;
 
+import "amino/amino.proto";
 import "gogoproto/gogo.proto";
 import "cosmos_proto/cosmos.proto";
 
@@ -10,6 +11,8 @@ option go_package = "github.com/hobbyworld-project/hobbychain/x/hobby/types";
 message Params {
   option (gogoproto.goproto_stringer) = false;
   DenomExchange exchange = 1 [(gogoproto.nullable) = false, (gogoproto.jsontag) = "exchange"];
+  // governance params of ERC721
+  GovErc721 gov_erc721 = 2 [(gogoproto.nullable) = false, (amino.dont_omitempty) = true];
 }
 
 message DenomExchange {
@@ -25,4 +28,80 @@ message DenomExchange {
   ];
   // allow list
   repeated string allow_list = 4;
+}
+
+
+message GovErc721 {
+  // enable_evm is the parameter to enable the governance of evm contract.
+  bool enable_evm = 1;
+  // master_vesting_reward parameter is the rewards to release for master planet with staking denom
+  string master_vesting_reward = 2 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec"
+  ];
+
+  int64 master_vesting_epochs = 3;
+
+  // slave_vesting_reward parameter is the rewards to release for slave planet with staking denom
+  string slave_vesting_reward = 4 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec"
+  ];
+
+  int64 slave_vesting_epochs = 5;
+
+  // common_vesting_reward parameter is the rewards to release for common planet with staking denom
+  string common_vesting_reward = 6 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec"
+  ];
+  int64 common_vesting_epochs = 7;
+
+  // settle_interval_epochs defines how many epochs interval to settle once
+  int64  settle_interval_epochs = 8;
+
+  string denom = 9;
+
+  string mint_quota = 10 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec"
+  ];
+
+  string contract_admin_addr = 11;
+
+  bool allow_deploy = 12;
+}
+
+message GenesisNft {
+  // NFT card holder ethereum address
+  string owner = 1;
+  // NFT card holder native address
+  string address = 2;
+  // NFT card token id
+  string token_id = 3 [
+    (cosmos_proto.scalar)  = "cosmos.Int",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int"
+  ];
+  // NFT card type
+  uint32 token_type =4;
+  // NFT card vote weight
+  uint32 vote_weight = 5;
+  // NFT card total vesting amount
+  string vesting_amount = 6 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec"
+  ];
+  // NFT card active height
+  int64 active_height = 7;
+  // NFT card vesting epochs
+  int64 vesting_epochs =8;
+  int64 last_settle_height = 9;
+  string linear_amount = 10 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec"
+  ];
+  string released_amount = 11 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec"
+  ];
 }

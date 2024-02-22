@@ -76,6 +76,13 @@ genesis:
         no_base_fee: false
     hobby:
       params:
+        gov_erc721:
+          allow_deploy: true
+          master_vesting_epochs: "100"
+          slave_vesting_epochs: "100"
+          common_vesting_epochs: "100"
+          settle_interval_epochs: "10"
+          contract_admin_addr: "0x90cfd4d61c9d4c63f2e4648229775aba19ced8df"
         exchange:
           from_denom: "uhby"
           to_denom: "usby"
@@ -139,13 +146,6 @@ genesis:
           heights: [ 9010284, 18020568, 27030852, 36041136, 45051420 ]
     gov:
       params:
-        gov_erc721:
-          allow_deploy: true
-          master_vesting_epochs: "100"
-          slave_vesting_epochs: "100"
-          common_vesting_epochs: "100"
-          settle_interval_epochs: "10"
-          contract_admin_addr: "0x90cfd4d61c9d4c63f2e4648229775aba19ced8df"
         min_deposit:
           - amount: "10000000000000000000000"
             denom: "usby"
