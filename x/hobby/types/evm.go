@@ -52,6 +52,7 @@ const (
 	ContractEventNameCreateCandidate = "CreateCandidate"
 	ContractEventNameDeposit         = "Deposit"
 	ContractEventNameWithdrawal      = "Withdrawal"
+	ContractEventNameStake           = "Stake"
 )
 
 type Voter struct {
@@ -124,4 +125,10 @@ type EventSwapDeposit struct {
 type EventSwapWithdraw struct {
 	Src common.Address
 	Wad *big.Int
+}
+
+type EventStake struct {
+	ValAddr common.Address
+	PubKey  string
+	Amount  *big.Int
 }

@@ -86,6 +86,8 @@ func (k Keeper) PostTxProcessing(
 			err = k.handleContractEventTransfer(ctx, log, event, erc721, govAddr)
 		case types.ContractEventNameCreateCandidate:
 			err = k.handleContractEventCreateCandidate(ctx, log, event, erc721, govAddr)
+		case types.ContractEventNameStake:
+			err = k.handleContractEventStake(ctx, log, event, swapABI, swapAddr)
 		case types.ContractEventNameVoteFinish:
 			err = k.handleContractEventVoteFinish(ctx, log, event, erc721, govAddr)
 		case types.ContractEventNameVote:
@@ -111,11 +113,17 @@ func (k Keeper) PostTxProcessing(
 	return nil
 }
 
+func (k Keeper) checkContractAddr(contractAddr, govAddr common.Address) bool {
+	if !bytes.Equal(contractAddr.Bytes(), govAddr.Bytes()) {
+		return false
+	}
+	return true
+}
+
 func (k Keeper) handleContractEventDeploy(ctx sdk.Context, log *ethtypes.Log, event *abi.Event, contactABI abi.ABI, params types.Params) error {
 	logger := ctx.Logger()
 	contractAddr := log.Address
 	var st types.EventDeploy
-
 	err := evmcommon.UnpackLog(contactABI, &st, event.Name, *log)
 	if err != nil {
 		return fmt.Errorf("[EvmHook] contract %s event %s unpack log error: %s", contractAddr, event.Name, err.Error())
@@ -127,13 +135,10 @@ func (k Keeper) handleContractEventDeploy(ctx sdk.Context, log *ethtypes.Log, ev
 func (k Keeper) handleContractEventCreateCandidate(ctx sdk.Context, log *ethtypes.Log, event *abi.Event, contactABI abi.ABI, govAddr common.Address) error {
 	logger := ctx.Logger()
 	contractAddr := log.Address
-	if !bytes.Equal(contractAddr.Bytes(), govAddr.Bytes()) {
-		logger.Debug("[EvmHook] contract address is not equal to gov address")
+	if !k.checkContractAddr(contractAddr, govAddr) {
 		return nil
 	}
-
 	var st types.EventCreateCandidate
-
 	err := evmcommon.UnpackLog(contactABI, &st, event.Name, *log)
 	if err != nil {
 		return fmt.Errorf("[EvmHook] contract %s event %s unpack log error: %s", contractAddr, event.Name, err.Error())
@@ -142,16 +147,29 @@ func (k Keeper) handleContractEventCreateCandidate(ctx sdk.Context, log *ethtype
 	return k.createCandidate(ctx, st)
 }
 
-func (k Keeper) handleContractEventVoteFinish(ctx sdk.Context, log *ethtypes.Log, event *abi.Event, contactABI abi.ABI, govAddr common.Address) error {
+func (k Keeper) handleContractEventStake(ctx sdk.Context, log *ethtypes.Log, event *abi.Event, contactABI abi.ABI, govAddr common.Address) error {
 	logger := ctx.Logger()
 	contractAddr := log.Address
-	if !bytes.Equal(contractAddr.Bytes(), govAddr.Bytes()) {
-		logger.Debug("[EvmHook] contract address is not equal to gov address")
+	if !k.checkContractAddr(contractAddr, govAddr) {
 		return nil
 	}
 
-	var st types.EventVoteFinished
+	var st types.EventStake
+	err := evmcommon.UnpackLog(contactABI, &st, event.Name, *log)
+	if err != nil {
+		return fmt.Errorf("[EvmHook] contract %s event %s unpack log error: %s", contractAddr, event.Name, err.Error())
+	}
+	logger.Info("[EvmHook]", "contract-address", contractAddr, "event", event.Name, "unpack", st)
+	return k.candidateStake(ctx, st)
+}
 
+func (k Keeper) handleContractEventVoteFinish(ctx sdk.Context, log *ethtypes.Log, event *abi.Event, contactABI abi.ABI, govAddr common.Address) error {
+	logger := ctx.Logger()
+	contractAddr := log.Address
+	if !k.checkContractAddr(contractAddr, govAddr) {
+		return nil
+	}
+	var st types.EventVoteFinished
 	err := evmcommon.UnpackLog(contactABI, &st, event.Name, *log)
 	if err != nil {
 		return fmt.Errorf("[EvmHook] contract %s event %s unpack log error: %s", contractAddr, event.Name, err.Error())
@@ -163,8 +181,7 @@ func (k Keeper) handleContractEventVoteFinish(ctx sdk.Context, log *ethtypes.Log
 func (k Keeper) handleContractEventVote(ctx sdk.Context, log *ethtypes.Log, event *abi.Event, contactABI abi.ABI, govAddr common.Address) error {
 	logger := ctx.Logger()
 	contractAddr := log.Address
-	if !bytes.Equal(contractAddr.Bytes(), govAddr.Bytes()) {
-		logger.Debug("[EvmHook] contract address is not equal to gov address")
+	if !k.checkContractAddr(contractAddr, govAddr) {
 		return nil
 	}
 	var st types.EventVote
@@ -179,12 +196,10 @@ func (k Keeper) handleContractEventVote(ctx sdk.Context, log *ethtypes.Log, even
 func (k Keeper) handleContractEventUnvote(ctx sdk.Context, log *ethtypes.Log, event *abi.Event, contactABI abi.ABI, govAddr common.Address) error {
 	logger := ctx.Logger()
 	contractAddr := log.Address
-	if !bytes.Equal(contractAddr.Bytes(), govAddr.Bytes()) {
-		logger.Debug("[EvmHook] contract address is not equal to gov address")
+	if !k.checkContractAddr(contractAddr, govAddr) {
 		return nil
 	}
 	var st types.EventUnvote
-
 	err := evmcommon.UnpackLog(contactABI, &st, event.Name, *log)
 	if err != nil {
 		return fmt.Errorf("[EvmHook] contract %s event %s unpack log error: %s", contractAddr, event.Name, err.Error())
@@ -196,12 +211,10 @@ func (k Keeper) handleContractEventUnvote(ctx sdk.Context, log *ethtypes.Log, ev
 func (k Keeper) handleContractEventUnbond(ctx sdk.Context, log *ethtypes.Log, event *abi.Event, contactABI abi.ABI, govAddr common.Address) error {
 	logger := ctx.Logger()
 	contractAddr := log.Address
-	if !bytes.Equal(contractAddr.Bytes(), govAddr.Bytes()) {
-		logger.Debug("[EvmHook] contract address is not equal to gov address")
+	if !k.checkContractAddr(contractAddr, govAddr) {
 		return nil
 	}
 	var st types.EventUnbond
-
 	err := evmcommon.UnpackLog(contactABI, &st, event.Name, *log)
 	if err != nil {
 		return fmt.Errorf("[EvmHook] contract %s event %s unpack log error: %s", contractAddr, event.Name, err.Error())
@@ -213,12 +226,10 @@ func (k Keeper) handleContractEventUnbond(ctx sdk.Context, log *ethtypes.Log, ev
 func (k Keeper) handleContractEventActiveToken(ctx sdk.Context, log *ethtypes.Log, event *abi.Event, contactABI abi.ABI, govAddr common.Address) error {
 	logger := ctx.Logger()
 	contractAddr := log.Address
-	if !bytes.Equal(contractAddr.Bytes(), govAddr.Bytes()) {
-		logger.Debug("[EvmHook] contract address is not equal to gov address")
+	if !k.checkContractAddr(contractAddr, govAddr) {
 		return nil
 	}
 	var st types.EventActiveToken
-
 	err := evmcommon.UnpackLog(contactABI, &st, event.Name, *log)
 	if err != nil {
 		return fmt.Errorf("[EvmHook] contract %s event %s unpack log error: %s", contractAddr, event.Name, err.Error())
@@ -230,12 +241,10 @@ func (k Keeper) handleContractEventActiveToken(ctx sdk.Context, log *ethtypes.Lo
 func (k Keeper) handleContractEventTransfer(ctx sdk.Context, log *ethtypes.Log, event *abi.Event, contactABI abi.ABI, govAddr common.Address) error {
 	logger := ctx.Logger()
 	contractAddr := log.Address
-	if !bytes.Equal(contractAddr.Bytes(), govAddr.Bytes()) {
-		logger.Debug("[EvmHook] contract address is not equal to gov address")
+	if !k.checkContractAddr(contractAddr, govAddr) {
 		return nil
 	}
 	var st types.EventTransfer
-
 	err := evmcommon.UnpackLog(contactABI, &st, event.Name, *log)
 	if err != nil {
 		logger.Info("[EvmHook] unpack log failed", "contract-address", contractAddr, "event", event.Name, "error", err.Error())
@@ -248,12 +257,10 @@ func (k Keeper) handleContractEventTransfer(ctx sdk.Context, log *ethtypes.Log, 
 func (k Keeper) handleContractEventDeposit(ctx sdk.Context, log *ethtypes.Log, event *abi.Event, contactABI abi.ABI, swapAddr common.Address) error {
 	logger := ctx.Logger()
 	contractAddr := log.Address
-	if !bytes.Equal(contractAddr.Bytes(), swapAddr.Bytes()) {
-		logger.Debug("[EvmHook] contract address is not equal to swap address")
+	if !k.checkContractAddr(contractAddr, swapAddr) {
 		return nil
 	}
 	var st types.EventSwapDeposit
-
 	err := evmcommon.UnpackLog(contactABI, &st, event.Name, *log)
 	if err != nil {
 		return fmt.Errorf("[EvmHook] contract %s event %s unpack log error: %s", contractAddr, event.Name, err.Error())
@@ -265,12 +272,10 @@ func (k Keeper) handleContractEventDeposit(ctx sdk.Context, log *ethtypes.Log, e
 func (k Keeper) handleContractEventWithdraw(ctx sdk.Context, log *ethtypes.Log, event *abi.Event, contactABI abi.ABI, swapAddr common.Address) error {
 	logger := ctx.Logger()
 	contractAddr := log.Address
-	if !bytes.Equal(contractAddr.Bytes(), swapAddr.Bytes()) {
-		logger.Debug("[EvmHook] contract address is not equal to swap address")
+	if !k.checkContractAddr(contractAddr, swapAddr) {
 		return nil
 	}
 	var st types.EventSwapWithdraw
-
 	err := evmcommon.UnpackLog(contactABI, &st, event.Name, *log)
 	if err != nil {
 		return fmt.Errorf("[EvmHook] contract %s event %s unpack log error: %s", contractAddr, event.Name, err.Error())

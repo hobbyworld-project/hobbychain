@@ -6,6 +6,9 @@ import (
 	"encoding/json"
 	"fmt"
 	abci "github.com/cometbft/cometbft/abci/types"
+	amino "github.com/cosmos/cosmos-sdk/codec"
+	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
+	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
@@ -569,6 +572,36 @@ func (k Keeper) createCandidate(ctx sdk.Context, st types.EventCreateCandidate) 
 	candidate.Status = types.ValidatorStatusCandidate
 	k.DeleteCandidateVoters(ctx, candidate.ValAddr)
 	k.SetCandidate(ctx, candidate)
+	return nil
+}
+
+func (k Keeper) candidateStake(ctx sdk.Context, st types.EventStake) error {
+	valAddr := sdk.ValAddress(st.ValAddr.Bytes())
+	candidate, ok := k.GetCandidate(ctx, valAddr)
+	if !ok {
+		return fmt.Errorf("evm contract staking: no candidate found, val address: %v", valAddr.String())
+	}
+	amount := sdk.NewCoin(k.stakingKeeper.BondDenom(ctx), sdk.NewIntFromBigInt(st.Amount))
+	if !amount.Equal(candidate.StakingCoin) {
+		return fmt.Errorf("evm contract staking: stake amount not match")
+	}
+	candidate.Status = types.ValidatorStatusVoting
+	var pk cryptotypes.PubKey
+	codec := amino.NewProtoCodec(codectypes.NewInterfaceRegistry())
+	if err := codec.UnmarshalInterfaceJSON([]byte(st.PubKey), &pk); err != nil {
+		return fmt.Errorf("evm contract staking: unmarshal interface JSON error: %v", err.Error())
+	}
+
+	msg, err := stakingtypes.NewMsgCreateValidator(
+		valAddr, pk, amount, stakingtypes.Description{}, stakingtypes.CommissionRates{}, sdk.Int{},
+	)
+	if err != nil {
+		return fmt.Errorf("evm contract staking: new create validator msg error: %v", err.Error())
+	}
+	_, err = k.stakingKeeper.CreateEvmStaking(ctx, msg)
+	if err != nil {
+		return fmt.Errorf("evm contract staking: create evm candidate staking error: %v", err.Error())
+	}
 	return nil
 }
 

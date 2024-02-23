@@ -44,6 +44,7 @@ type StakingKeeper interface {
 	) (shares sdk.Dec, err error)
 	BondDenom(ctx sdk.Context) string
 	ValidatorByConsAddr(sdk.Context, sdk.ConsAddress) stakingtypes.ValidatorI // get a particular validator by consensus address
+	CreateEvmStaking(ctx sdk.Context, msg *stakingtypes.MsgCreateValidator) (*stakingtypes.MsgCreateValidatorResponse, error)
 	CreateEvmValidator(ctx sdk.Context, valAddr sdk.ValAddress) (*stakingtypes.MsgCreateValidatorResponse, error)
 }
 
