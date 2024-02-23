@@ -64,7 +64,7 @@ func NewKeeper(
 		ps = ps.WithKeyTable(types.ParamKeyTable())
 	}
 
-	return &Keeper{
+	k := &Keeper{
 		cdc:              cdc,
 		storeKey:         storeKey,
 		memKey:           memKey,
@@ -84,6 +84,8 @@ func NewKeeper(
 		groupKeeper:      groupKeeper,
 		feeCollectorName: feeCollectorName,
 	}
+	k.stakingKeeper.SetEvmCallback(k.GovEventHanlder)
+	return k
 }
 
 func (k Keeper) Logger(ctx sdk.Context) log.Logger {
