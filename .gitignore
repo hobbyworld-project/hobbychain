@@ -10,3 +10,4 @@ release/
 ~
 /go.work
 /go.work.sum
+/contracts/@openzeppelin/
