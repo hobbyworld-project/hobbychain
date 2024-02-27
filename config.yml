@@ -148,7 +148,7 @@ genesis:
       params:
         min_deposit:
           - amount: "10000000000000000000000"
-            denom: "usby"
+            denom: "uhby"
     distribution:
       params:
         base_proposer_reward: "0.010000000000000000"

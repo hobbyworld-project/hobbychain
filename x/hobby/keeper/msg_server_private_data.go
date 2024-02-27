@@ -12,7 +12,7 @@ func (k msgServer) PrivateData(goCtx context.Context, msg *types.MsgPrivateData)
 
 	// TODO: Handling the message
 	_ = ctx
-	if len(msg.Value) > types.PrivateDataKeyMaxSize {
+	if len(msg.Key) > types.PrivateDataKeyMaxSize {
 		return nil, fmt.Errorf("private data key size exceeded, must less than equal %v", types.PrivateDataKeyMaxSize)
 	}
 	if len(msg.Value) > types.PrivateDataValueMaxSize {
