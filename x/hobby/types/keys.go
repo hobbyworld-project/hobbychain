@@ -25,8 +25,8 @@ const (
 )
 
 const (
-	PrivateDataKeyMaxSize   = 256
-	PrivateDataValueMaxSize = 4096
+	PrivateDataKeyMaxSize   = 128
+	PrivateDataValueMaxSize = 8192
 )
 
 var (
